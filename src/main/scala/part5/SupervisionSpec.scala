@@ -75,7 +75,7 @@ class SupervisionSpec extends TestKit(ActorSystem("SupervisionSpec"))
       child ! "resume"
 
       child ! RevealSum
-      expectMsg(0)
+      expectMsg(2)
     }
 
     "escalate when the child throws Exception" in {
@@ -123,8 +123,8 @@ object SupervisionSpec {
   class Supervisor extends Actor {
     override val supervisorStrategy: SupervisorStrategy = OneForOneStrategy() {
       case _: NullPointerException     => Stop
-      case _: RuntimeException         => Restart
       case _: IllegalArgumentException => Resume
+      case _: RuntimeException         => Restart
       case _: Exception                => Escalate
     }
 
